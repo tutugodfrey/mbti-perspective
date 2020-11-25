@@ -1,0 +1,159 @@
+
+body {
+  background-color: white;
+  font-family: sans-serif;
+
+  .container {
+    width: 100%;
+    min-height: 100%;
+    h1 {
+      color: rgb(41, 64, 128);
+      font-size: large;
+    }
+    p {
+      color: rgb(80, 78, 78);
+    }
+    > div > div#header {
+      padding-left: 40px;
+      // > h1 {
+      //   color: rgb(2, 2, 71);
+      //   font-size: large;
+      // }
+      > p {
+        // color: rgb(41, 39, 39);
+        padding-right: 500px;
+      }
+    }
+    > div > div#questions {
+      // border: 1px solid blue;
+      margin-top: 50px;
+      width: 60%;
+      position: relative;
+      left: 20%;
+      > div {
+        border: 1px solid rgb(223, 219, 219);
+        text-align: center;
+        border-radius: 3px;
+        div#response {
+          display: flex;
+          flex-direction: row;
+          flex-basis: content;
+          align-content: space-between;
+          justify-content: center;
+          position: relative;
+          padding: 12px 0;
+          width: 60%;
+          left: 15%;
+          input[type=radio] {
+            height: 20px;
+            width: 20px;
+          }
+        }
+        strong#disagree {
+          color: red;
+          font-weight: lighter;
+        }
+        strong#agree {
+          color: green;
+          font-weight: lighter;
+        }
+      }
+      > div#email-div {
+        border: 1px solid green;
+        input {
+          width: 40ch;
+          padding: 8px;
+          width: 60%;
+          margin-bottom: 30px;;
+        }
+      }
+    }
+    #submit-div {
+      margin-top: 60px;
+      margin-bottom: 200px;
+      position: relative;
+      width: 10%;
+      left: 45%;
+      // border-radius: 5px;
+      > input {
+        width: 100%;
+        background-color: rgb(77, 80, 243);
+        color: white;
+        padding: 7px;
+        border-radius: 5px;
+
+      }
+    }
+
+    // perspective
+    div#perspective {
+      border: 1.5px solid rgb(211, 208, 208);
+      margin: 55px;
+      padding: 55px 30px;
+      border-radius: 3px;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-around;
+      div#perspective-result {
+        width: 50%;
+        padding: 10px;
+        font-weight: bold;
+        h1 {
+          font-size: 1.5em;
+        }
+      }
+      div#perspective-summary {
+        width: 50%;
+        padding: 10px;
+        color: rgb(150, 147, 147);
+        font-weight: lighter;
+        font-size: 0.8em;
+        > div {
+          display: flex;
+          flex-direction: column;
+          margin: 5px;
+          > div {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            position: relative;
+            margin: 10px;
+            div.perspective-bar {
+              border: 1px;
+              position: absolute;
+              left: 30%;
+              width: 250px;
+              height: 15px;
+              display: flex;
+              flex-direction: row;
+              justify-content: space-evenly;
+              border-radius: 5px;
+              div:nth-child(1){
+                border-top-left-radius: 5px;
+                border-bottom-left-radius: 5px;
+                width: 100%;
+              }
+              div:nth-child(2) {
+                border-top-right-radius: 5px;
+                border-bottom-right-radius: 5px;
+                width: 100%;
+              }
+              div:nth-child(1) {
+                background-color: rgba(231, 245, 248, 0.918);
+              }
+              div:nth-child(1).mbti-on {
+                background-color: rgba(146, 13, 146, 0.822);
+              }
+              div:nth-child(2) {
+                background-color: rgba(231, 245, 248, 0.918);
+              }
+              div:nth-child(2).mbti-on {
+                background-color: rgba(146, 13, 146, 0.822);
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
