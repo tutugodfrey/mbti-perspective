@@ -74,19 +74,13 @@ function range(start=0, end=0, interval=1) {
 
   return range;
 }
+
 const Home = () => {
   const [ email, getEmail ] = useState('');
   const [ errMessage, getErrMessage ] = useState('');
   const [responses, updateResponse] = useState({});
-  // const [ displayResult, updateDisplayResult ] = useState(true);
   const [ displayResult, updateDisplayResult ] = useState(false);
   const [ toggleClassName, setClassName ] = useState({});
-  // const toggleClassName = {
-  //   E: "mbti-on",
-  //   J: "mbti-on",
-  //   S: "mbti-on",
-  //   T: "mbti-on",
-  // }
   const [ mbtiResult, updateResult ] = useState({});
   const mbtiDimension = {
     EI: ['E', 'I'],
@@ -146,7 +140,25 @@ const Home = () => {
 
     mbtiResult.mbtiScore = mbtiScore.join('');
     updateDisplayResult(true);
-    updateResult(mbtiResult)
+    updateResult(mbtiResult);
+
+    responses.email = email;
+    responses.mbtiScore = mbtiResult.mbtiScore 
+
+    fetch('http://localhost:3005/result', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(responses),
+    })
+    .then(response => response.json())
+    .then(data => {
+      console.log('Success:', data);
+    })
+    .catch((error) => {
+      console.error('Error:', error);
+    });
   }
 
   const handleChange = (event) => {
