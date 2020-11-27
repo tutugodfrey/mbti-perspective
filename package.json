@@ -4,10 +4,9 @@
   "description": "Rather than a whiteboard interview or an automated coding test, we have each candidate perform a medium sized interview challenge. This challenge is your opportunity to show off your skills, and gives you insight into the type of technical tasks we deal with on a daily basis at SHIFT.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "start:dev": "webpack-cli serve --mode development --hot --open 'Google Chrome'",
     "build": "webpack --mode production",
-    "start": "server/index.js"
+    "start": "node server/index.js"
   },
   "author": "Godfrey Tutu",
   "license": "ISC",

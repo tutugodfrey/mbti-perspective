@@ -20,16 +20,16 @@ const connection = (connectionString, models=[]) => {
 
 const tableQuery = `CREATE TABLE IF NOT EXISTS mbti_result (
   id SERIAL NOT NULL PRIMARY KEY,
-  q1 INT NOT NULL,
-  q2 INT NOT NULL,
-  q3 INT NOT NULL,
-  q4 INT NOT NULL,
-  q5 INT NOT NULL,
-  q6 INT NOT NULL,
-  q7 INT NOT NULL,
-  q8 INT NOT NULL,
-  q9 INT NOT NULL,
-  q10 INT NOT NULL,
+  answer1 INT NOT NULL,
+  answer2 INT NOT NULL,
+  answer3 INT NOT NULL,
+  answer4 INT NOT NULL,
+  answer5 INT NOT NULL,
+  answer6 INT NOT NULL,
+  answer7 INT NOT NULL,
+  answer8 INT NOT NULL,
+  answer9 INT NOT NULL,
+  answer10 INT NOT NULL,
   mbtiscore VARCHAR(10) NOT NULL,
   email VARCHAR(30) NOT NULL UNIQUE
 );`;

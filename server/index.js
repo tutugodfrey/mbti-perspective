@@ -25,7 +25,7 @@ createTable(db_connection);
 app.post('/result', async (req, res) =>  {
   const userData = req.body;
   const queryString = `INSERT INTO mbti_result (
-                      q1, q2, q3, q4, q5, q6, q7, q8, q9, q10, mbtiscore, email)
+                      answer1, answer2, answer3, answer4, answer5, answer6, answer7, answer8, answer9, answer10, mbtiscore, email)
                       VALUES ('${userData['0']}',
                               '${userData['1']}',
                               '${userData['2']}',
