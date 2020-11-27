@@ -145,3 +145,19 @@ Create a repository using your personal GitHub account and send us the link. Tha
 
 
 Happy Hacking!
+
+# RUNNING THE APPLICATION
+
+The application have been scripted to run in a docker environment and has integration with PostgreSQL database also running as a container. The configuration for building the docker image is in Dockerfile at the root of the project. The following steps will be followed to build the image, run the database server and start the application. However, this has been automated, so you simple run the deploy script by typing in a terminal `./deploy_script`
+
+run `./deploy_script` or enter the following command one by one
+
+`docker build -t mbti-img:latest .` # Create the application container
+
+`docker run  -d --name postgres_host -p 5433:5432 -e POSTGRES_PASSWORD=postgres postgres` # run a postgres database
+
+`docker run -d -p 3005:3005 --link my_postgres:postgres_host  --name mbti-app mbti-img` # run app link to the database
+
+After the commands succeed, open your browser and visit the page by typing `http://localhost:3005`. 
+
+

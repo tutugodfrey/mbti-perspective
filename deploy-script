@@ -1,0 +1,7 @@
+#! /bin/bash
+
+docker build -t mbti-img:latest . # Create the application container
+docker run  -d --name postgres_host -p 5433:5432 -e POSTGRES_PASSWORD=postgres postgres # run a postgres database
+sleep 10
+# createdb mbti_test -U postgres -h localhost -p 5433
+docker run -d -p 3005:3005 --link my_postgres:postgres_host  --name mbti-app mbti-img # run app link to the database
