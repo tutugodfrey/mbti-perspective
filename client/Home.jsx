@@ -6,11 +6,11 @@ const { range, fetchRequestHandler, validateEmail } = functs;
 
 const Home = () => {
   const [ email, getEmail ] = useState('');
-  const [ errMessage, getErrMessage ] = useState('');
-  const [responses, updateResponse] = useState({});
+  const [ errMessage, setErrMessage ] = useState('');
+  const [ responses, updateResponse ] = useState({});
   const [ displayResult, updateDisplayResult ] = useState(false);
   const [ toggleClassName, setClassName ] = useState({});
-  const [ mbtiResult, updateResult ] = useState({});
+  const [ mbtiScore, updateScore ] = useState('');
   const mbtiDimension = {
     EI: ['E', 'I'],
     SN: ['S', 'N'],
@@ -19,80 +19,97 @@ const Home = () => {
   }
   
   const onSubmit = () => {
-    if (!email) return getErrMessage('Please enter you email');
-    if (!validateEmail(email)) return getErrMessage('Please provide a valid email address');
-    if (Object.keys(responses).length !== 10)  return getErrMessage('Please complete all questions');
+    if (Object.keys(responses).length !== 10)
+      return setErrMessage('Please complete all questions');
+    if (!email)
+      return setErrMessage('Please enter you email');
+    if (!validateEmail(email))
+      return setErrMessage('Please provide a valid email address');
 
     // calculate score and submit
     const questionIdx = Object.keys(responses);
-    const dimension = {};
-    let count = 1
+    const mbtiScoring = {};
     questionIdx.forEach((qIdx )=> {
-      if (dimension[questions[qIdx].dimension]) {
-        dimension[questions[qIdx].dimension] = dimension[questions[qIdx].dimension] + responses[qIdx];
-        if (responses[qIdx] >= 4 && questions[qIdx].direction === 1) {
-          dimension[questions[qIdx].meaning] = dimension[questions[qIdx].meaning] + 1;
-        }
+      const question = questions[qIdx];
+      const answer = responses[qIdx];
+      const dimension = question.dimension;
+      const meaning = question.meaning;
+      const direction = question.direction;
+      const dimArray = mbtiDimension[dimension];
 
-        if (responses[qIdx] >= 4 && questions[qIdx].direction === -1) {
-          dimension[questions[qIdx].meaning] = dimension[questions[qIdx].meaning] + 1;
+      if (mbtiScoring[dimension]) {
+        mbtiScoring[dimension] = mbtiScoring[dimension] + answer;
+        if ((answer > 4 && direction === 1) || answer > 4 && direction === -1) {
+          mbtiScoring[meaning] = mbtiScoring[meaning] + 1;
+        } else if ((answer < 4 && direction === 1) || (answer < 4 && direction === -1)) {
+          const newMeaning = dimArray.find(dim => dim !== meaning);
+          mbtiScoring[newMeaning] = mbtiScoring[newMeaning] + 1;
+        } else if (answer === 4) {
+          mbtiScoring[dimArray[0]] = mbtiScoring[dimArray[0]] + 1;
         }
-
       } else {
-        dimension[questions[qIdx].dimension] = responses[qIdx];
-        dimension[mbtiDimension[questions[qIdx].dimension][0]] = 0;
-        dimension[mbtiDimension[questions[qIdx].dimension][1]] = 0; 
-        if (responses[qIdx] >= 4 && questions[qIdx].direction === 1) {
-          dimension[questions[qIdx].meaning] = 1;
+        mbtiScoring[dimension] = answer;
+        mbtiScoring[dimArray[0]] = 0;
+        mbtiScoring[dimArray[1]] = 0;
+        if ((answer > 4 && direction === 1) || answer > 4 && direction === -1) {
+          mbtiScoring[meaning] = 1;
+        } else if ((answer < 4 && direction === 1) || (answer < 4 && direction === -1)) {
+          const newMeaning = dimArray.find(dim => dim !== meaning);
+          mbtiScoring[newMeaning] = 1;
+        } else if (answer === 4) {
+          mbtiScoring[dimArray[0]] = 1;
         }
-
-        if (responses[qIdx] >= 4 && questions[qIdx].direction === -1) {
-          dimension[questions[qIdx].meaning] = 1;
-        }
-        count ++;
       }
     });
 
-    const mbtiScore = Object.keys(mbtiDimension).map(dim => {
-      if (dimension[mbtiDimension[dim][0]] > dimension[mbtiDimension[dim][1]]) {
-        toggleClassName[mbtiDimension[dim][0]] = 'mbti-on';
+    // create collection of hightest scores across dimension &
+    // update the toggleClassName object
+    const score = Object.keys(mbtiDimension).map(dim => {
+      const dimArray = mbtiDimension[dim];
+      const dim1 = dimArray[0];
+      const dim2 = dimArray[1];
+      if (mbtiScoring[dim1] > mbtiScoring[dim2]) {
+        toggleClassName[dim1] = 'mbti-on';
         setClassName(toggleClassName);
-        return mbtiDimension[dim][0];
-      } else if (dimension[mbtiDimension[dim][0]] < dimension[mbtiDimension[dim][1]]) {
-        toggleClassName[mbtiDimension[dim][1]] = 'mbti-on';
+        return dim1;
+      } else if (mbtiScoring[dim1] < mbtiScoring[dim2]) {
+        toggleClassName[dim2] = 'mbti-on';
         setClassName(toggleClassName);
-        return mbtiDimension[dim][1];
+        return dim2;
       } else {
-        toggleClassName[mbtiDimension[dim][0]] = 'mbti-on';
+        toggleClassName[dim1] = 'mbti-on';
         setClassName(toggleClassName);
-        return mbtiDimension[dim][0];
+        return dim1;
       }
-    });
-
-    mbtiResult.mbtiScore = mbtiScore.join('');
+    }).join('');
+  
+    updateScore(score);
     updateDisplayResult(true);
-    updateResult(mbtiResult);
 
     responses.email = email;
-    responses.mbtiScore = mbtiResult.mbtiScore 
+    responses.mbtiScore = score;
     const serverResponse = fetchRequestHandler(responses);
     console.log(serverResponse);
   }
 
   const handleChange = (event) => {
     const [ questionIdx, userResponse ] = [ ...event.target.value.split(' ')];
-    const questionIndex = parseInt(questionIdx, 10)
+    const questionIndex = parseInt(questionIdx, 10);
     responses[questionIndex] = parseInt(userResponse, 10);
     updateResponse(responses);
   }
 
+  const closeErrorModal = () => {
+    setErrMessage('');
+  }
+
 
   return (
-    <div className='container'>
+    <div>
       {
       displayResult ? (
         <ResultPage
-          mbtiResult={ mbtiResult}
+          mbtiScore ={ mbtiScore }
           toggleClassName={toggleClassName}
         />
       ) : (
@@ -100,6 +117,7 @@ const Home = () => {
           handleChange={handleChange}
           onSubmit={onSubmit}
           getEmail={getEmail}
+          closeErrorModal={closeErrorModal}
           range={range}
           errMessage={errMessage} 
           questions={questions}
@@ -110,93 +128,125 @@ const Home = () => {
   );
 };
 
-const HomePage = ({ handleChange, onSubmit, getEmail, range, errMessage,  questions}) => {
+const HomePage = ({
+  handleChange,
+  onSubmit,
+  getEmail,
+  closeErrorModal,
+  range,
+  errMessage,
+  questions
+}) => {
   return (
-    <div>
-    <div id="header">
-      <h1>Discover Your Perspective</h1>
-      <p>Complete the 7 min test and get a detailed report of you lenses on the world.</p>
-    </div>
-    <div>
-      { 
-        errMessage ? <p>{errMessage}</p> : null
-      }
-    </div>
-    <div id='questions'>
-      { 
-        questions.map((test, index) => {
-          return (
-            <div key={index}>
-              <p>{test.question}</p>
-              <div id='response'>
-                <div>
-                  <strong id='disagree'>Disagree</strong>
-                </div>
-                {
-                  range(7).map(count => {
-                    return (
-                      <div key={count}>
-                        <input type='radio' name={`answer${index+1}`} onChange={handleChange} value={`${index} ${count + 1}`} />
-                      </div>
-                    )
-                  })
-                }
-                <div>
-                  <strong id='agree'>Agree</strong>
+    <div id='perspective-test'>
+      <div id="header">
+        <h1>Discover Your Perspective</h1>
+        <p>Complete the 7 min test and get a detailed report of you lenses on the world.</p>
+      </div>
+      <div>
+        { 
+          errMessage ? (
+            <div id="error-modal">
+              <span><button onClick={closeErrorModal}>x</button></span>
+              <p>
+                {errMessage}
+              </p>
+            </div> 
+          ): null
+        }
+      </div>
+      <div id='questions'>
+        { 
+          questions.map((test, index) => {
+            return (
+              <div key={index}>
+                <p>{test.question}</p>
+                <div id='response'>
+                  <div>
+                    <strong id='disagree'>Disagree</strong>
+                  </div>
+                  {
+                    range(7).map(count => {
+                      return (
+                        <div key={count}>
+                          <input
+                            type='radio'
+                            name={`answer${index}`}
+                            onChange={handleChange}
+                            value={`${index} ${count + 1}`}
+                          />
+                        </div>
+                      )
+                    })
+                  }
+                  <div>
+                    <strong id='agree'>Agree</strong>
+                  </div>
                 </div>
               </div>
-            </div>
-          );
-        })
-      }
-      <div id='email-div'>
-        <p>Your Email</p>
-        <input name='email' type='text' placeholder='you@example.com' onChange={e => getEmail(e.target.value)} />
+            );
+          })
+        }
+        <div id='email-div'>
+          <p>Your Email</p>
+          <input
+            name='email'
+            type='text'
+            placeholder='you@example.com'
+            onChange={e => getEmail(e.target.value)}
+          />
+        </div>
       </div>
-    </div>
-    <div id='submit-div'>
-        <input type='submit' value='Save & Continue' name='submit' onClick={onSubmit}/>
-    </div>
+      <div id='submit-div'>
+          <input
+            type='submit'
+            value='Save & Continue'
+            name='submit'
+            onClick={onSubmit}
+          />
+      </div>
   </div>
   )
 }
 
-const ResultPage = ({ mbtiResult, toggleClassName }) => {
+const ResultPage = ({ mbtiScore, toggleClassName }) => {
   const perspectives = [
     ['Introversion (I)', 'Extraversion (E)', 'I', 'E' ],
     ['Sensing (S)', 'Intuition (N)', 'S', 'N' ],
     [ 'Thinking (T)', 'Feeling (F)', 'T', 'F' ],
     [ 'Judging (J)', 'Perceiving (P)', 'J', 'P' ],
-  ]
+  ];
   return (
-    <div id='perspective'>
     <div id='perspective-result'>
-      <h1>Your Perspective</h1>
-     <p>Your Perspective Type is {mbtiResult.mbtiScore} </p>
-    </div>
-    <div id='perspective-summary'>
       <div>
-        {
-          perspectives.map(perspective => (
-            <div>
-            <div>
-              <strong>{perspective[0]}</strong>
-            </div>
-            <div>
-              <div className='perspective-bar'>
-                <div className={`${toggleClassName[perspective[2]]}`}></div>
-                <div className={`${toggleClassName[perspective[3]]}`}></div>
+        <div id='heading'>
+        <h1>Your Perspective</h1>
+        <p>Your Perspective Type is {mbtiScore} </p>
+      </div>
+      <div id='perspective-summary'>
+        <div>
+          {
+            perspectives.map((perspective, index)=> (
+              <div key={index}>
+              <div>
+                <strong>{perspective[0]}</strong>
+              </div>
+              <div>
+                <div className='perspective-bar'>
+                  <div className={`${toggleClassName[perspective[2]]}`}></div>
+                  <div className={`${toggleClassName[perspective[3]]}`}></div>
+                </div>
+              </div>
+              <div className="perspective-right">
+                <strong>{perspective[1]}</strong>
               </div>
             </div>
-            <div>
-              <strong>{perspective[1]}</strong>
-            </div>
-          </div>
-          ))
-        }
+            ))
+          }
+        </div>
+      </div>
       </div>
     </div>
-  </div>
   );
 }
 

@@ -3,7 +3,7 @@ import Home from './Home.jsx';
 
 import './styles/index.scss';
 const App = () => (
-  <div>
+  <div className='container'>
     <Home />
   </div>
 )

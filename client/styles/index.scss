@@ -1,154 +1,307 @@
+@import url('https://fonts.googleapis.com/css?family=Nunito');
+@import url('https://fonts.googleapis.com/css?family=Roboto');
 
 body {
-  background-color: white;
-  font-family: sans-serif;
-
+  background: #FFFFFF;
+  margin: 0px;
+  padding: 0px;
   .container {
     width: 100%;
     min-height: 100%;
-    h1 {
-      color: rgb(41, 64, 128);
-      font-size: large;
-    }
-    p {
-      color: rgb(80, 78, 78);
-    }
-    > div > div#header {
-      padding-left: 40px;
-      // > h1 {
-      //   color: rgb(2, 2, 71);
-      //   font-size: large;
-      // }
-      > p {
-        // color: rgb(41, 39, 39);
-        padding-right: 500px;
-      }
-    }
-    > div > div#questions {
-      // border: 1px solid blue;
-      margin-top: 50px;
-      width: 60%;
-      position: relative;
-      left: 20%;
-      > div {
-        border: 1px solid rgb(223, 219, 219);
-        text-align: center;
-        border-radius: 3px;
-        div#response {
-          display: flex;
-          flex-direction: row;
-          flex-basis: content;
-          align-content: space-between;
-          justify-content: center;
-          position: relative;
-          padding: 12px 0;
-          width: 60%;
-          left: 15%;
-          input[type=radio] {
-            height: 20px;
-            width: 20px;
-          }
-        }
-        strong#disagree {
-          color: red;
-          font-weight: lighter;
-        }
-        strong#agree {
-          color: green;
-          font-weight: lighter;
-        }
-      }
-      > div#email-div {
-        border: 1px solid green;
-        input {
-          width: 40ch;
-          padding: 8px;
-          width: 60%;
-          margin-bottom: 30px;;
-        }
-      }
-    }
-    #submit-div {
-      margin-top: 60px;
-      margin-bottom: 200px;
-      position: relative;
-      width: 10%;
-      left: 45%;
-      // border-radius: 5px;
-      > input {
-        width: 100%;
-        background-color: rgb(77, 80, 243);
-        color: white;
-        padding: 7px;
-        border-radius: 5px;
 
-      }
-    }
+    #perspective-test {
+      position: relative;
+      width: 1280px;
+      min-height: 1962px;
+      left: 62px;
+      margin-top: 62px;
 
-    // perspective
-    div#perspective {
-      border: 1.5px solid rgb(211, 208, 208);
-      margin: 55px;
-      padding: 55px 30px;
-      border-radius: 3px;
-      display: flex;
-      flex-direction: row;
-      justify-content: space-around;
-      div#perspective-result {
-        width: 50%;
-        padding: 10px;
-        font-weight: bold;
+      #header {
+        position: absolute;
+        margin-left: 75px;
+        margin-top: 35px;
         h1 {
-          font-size: 1.5em;
+          color: #113264;
+          width: 453px;
+          height: 18px;
+          left: 5.86%;
+          right: 58.75%;
+          padding-bottom: 18px;
+
+          font-family: 'Roboto';
+          font-style: normal;
+          font-weight: 500;
+          font-size: 18px;
+          line-height: 21px;
+        }
+        p {
+          color: #495057;
+          width: 582px;
+          height: 18px;
+          left: 5.86%;
+          right: 48.67%;
+
+          font-family: 'Roboto';
+          font-style: normal;
+          font-weight: normal;
+          font-size: 16px;
+          line-height: 19px;
         }
       }
-      div#perspective-summary {
-        width: 50%;
-        padding: 10px;
-        color: rgb(150, 147, 147);
-        font-weight: lighter;
-        font-size: 0.8em;
+
+      #questions {
+        position: absolute;
+        top: 137px;
+        left: 270px;
+        right: 270px;
+        margin-top: 48px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
         > div {
+          width: 740px;
+          height: 127px;
           display: flex;
           flex-direction: column;
-          margin: 5px;
+          align-items: center;
+          justify-content: center;
+          > p {
+            color: #495057;
+            height: 20px;
+            margin-bottom: 28px;
+            font-size: 18px;
+            line-height: 25px;
+            text-align: center;
+          }
+          border: 1px solid #E5E5E5;
+          box-sizing: border-box;
+          border-radius: 4px;
+          font-family: 'Nunito';
+          font-style: normal;
+          font-weight: bold;
+        }
+        #response {
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          justify-content: center;
+          > div > input[type=radio] {
+            width: 24px;
+            height: 24px;
+            margin-left: 24px;
+            mix-blend-mode: normal;
+            border: 3px solid #AAAAAA;
+            box-sizing: border-box;
+            transform: rotate(-180deg);
+          }
+          #agree {
+            color: #00A079;
+            width: 100px;
+            height: 20px;
+            margin-left: 24px;
+            font-size: 14px;
+            line-height: 19px;
+          }
+          #disagree {
+            color: #FA4344;
+            width: 100px;
+            height: 20px;
+            font-size: 14px;
+            line-height: 19px;
+            text-align: right;         
+          }
+        }
+
+        #email-div {
+          height: 155px;
+          p {
+            position: relative;
+            width: 524px;
+            height: 19px;
+            text-align: center;
+            margin-top: 24px;
+          }
+          input {
+            position: relative;
+            width: 570px;
+            height: 48px;
+            margin-bottom: 40px;
+            border: 2px solid #AAAAAA;
+            box-sizing: border-box;
+            border-radius: 4px;
+          }
+          > ::placeholder {
+            position: relative;
+            color: #E5E5E5;
+            text-align: left;
+            width: 156px;
+            height: 25px;
+            left: 28px;
+          }
+        }
+      }
+      #submit-div {
+        background-color: #3D59FA;
+        border-radius: 3px; 
+        position: absolute;
+        width: 155px;
+        height: 36px;
+        left: 44.84%;
+        right: 43.05%;
+        top: 86.44%;
+        input {
+          background: transparent;
+          border: none;
+          color: #FFFFFF;
+          position: relative;
+          // width: 122px;
+          // height: 20px;
+          width:  100%;
+          height: 100%;
+          // margin-top: 8px;
+          // left: 17px;
+          // right: 16px;
+          font-family: 'Roboto';
+          font-style: normal;
+          font-weight: 500;
+          font-size: 16px;
+          line-height: 19px;
+          text-align: center;
+        }
+      }
+      div#error-modal {
+        background-color: #297bf5;
+        position: fixed;
+        z-index: 1000;
+        width: 60%;
+        left: 20%;
+        height: 80px;
+        font-family: 'Roboto';
+        font-weight: bold;
+        font-size: 18px;
+        border-radius: 5px;
+        p {
+          text-align: center;
+          color: #FFFFFF;
+          position: absolute;
+          top: 20%;
+          width: 80%;
+          left: 10%;
+        }
+        span {
+          position: absolute;
+          right: 1%;
+          top: 2%;
+          font-weight: bolder;
+          button {
+            background: #FA4344;
+            color: #FFFFFF;
+            border: none;
+            border-radius: 3px;
+            height:22px;
+            width:22px;
+          }
+        }
+      }
+    }
+
+    #perspective-result {
+      position: relative;
+      width: 1280px;
+      min-height: 1962px;
+      left: 62px;
+      > div {
+        position: relative;
+        width: 1179px;
+        min-height: 270px;
+        left: 48px;
+        top: 62px;
+        border: 1px solid #E5E5E5;
+        box-sizing: border-box;
+        border-radius: 5px;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-evenly;
+        #heading {
+          position: relative;
+          left: 1px;
+          font-family: 'Roboto';
+          font-style: normal;
+          font-weight: 500;
+          padding-left: 43px;
+          width: 50%;
+          h1 {
+            position: relative;
+            width: 278.01px;
+            height: 27.96px;
+            font-size: 26px;
+            line-height: 30px;
+            color: #113264;
+            margin-top: 104px;
+          }
+          p {
+            width: 500.71px;
+            height: 13.5px;
+            font-size: 16px;
+            line-height: 19px;
+            color: #343A40;
+            margin-top: 19.29px;
+          }
+        }
+        #perspective-summary {
+          width: 50%;
           > div {
             display: flex;
-            flex-direction: row;
-            justify-content: space-between;
-            position: relative;
-            margin: 10px;
-            div.perspective-bar {
-              border: 1px;
-              position: absolute;
-              left: 30%;
-              width: 250px;
-              height: 15px;
+            flex-direction: column;
+            margin-top: 53.4px;
+            margin-bottom: 74.25px;
+            > div {
+              position: relative;
               display: flex;
               flex-direction: row;
-              justify-content: space-evenly;
-              border-radius: 5px;
-              div:nth-child(1){
-                border-top-left-radius: 5px;
-                border-bottom-left-radius: 5px;
-                width: 100%;
+              justify-content: space-between;
+              margin-top: 21.21px;
+              font-family: 'Roboto';
+              font-style: normal;
+              font-weight: 500;
+              font-size: 14px;
+              line-height: 146.16%;
+              color: #878787;
+              div.perspective-bar {
+                width: 218.33px;
+                height: 14.46px;
+                position: absolute;
+                left: 30%;
+                // left: 800.52px;
+                top: 2.25px;
+                display: flex;
+                flex-direction: row;
+                div:nth-child(1){
+                  border-top-left-radius: 5px;
+                  border-bottom-left-radius: 5px;
+                  width: 100%;
+                }
+                div:nth-child(2) {
+                  border-top-right-radius: 5px;
+                  border-bottom-right-radius: 5px;
+                  width: 100%;
+                }
+                div:nth-child(1) {
+                  background-color: #E9ECEF;
+                }
+                div:nth-child(1).mbti-on {
+                  background-color: #A920CB;
+                }
+                div:nth-child(2) {
+                  background-color: #E9ECEF;
+                }
+                div:nth-child(2).mbti-on {
+                  background-color: #A920CB;
+                }
               }
-              div:nth-child(2) {
-                border-top-right-radius: 5px;
-                border-bottom-right-radius: 5px;
-                width: 100%;
-              }
-              div:nth-child(1) {
-                background-color: rgba(231, 245, 248, 0.918);
-              }
-              div:nth-child(1).mbti-on {
-                background-color: rgba(146, 13, 146, 0.822);
-              }
-              div:nth-child(2) {
-                background-color: rgba(231, 245, 248, 0.918);
-              }
-              div:nth-child(2).mbti-on {
-                background-color: rgba(146, 13, 146, 0.822);
+              .perspective-right {
+                position: absolute;
+                left: 75%;
               }
             }
           }
@@ -157,3 +310,5 @@ body {
     }
   }
 }
+
+

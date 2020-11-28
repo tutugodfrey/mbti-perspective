@@ -4,12 +4,10 @@ export default {
     if (start && end === 0) {
       end = start;
       start = 0;
-  
     }
     for(let i = start; i < end; i+=interval) {
       range.push(i);
     }
-  
     return range;
   },
   fetchRequestHandler: (data) => {
