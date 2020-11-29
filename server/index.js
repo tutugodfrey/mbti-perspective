@@ -1,10 +1,8 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const dotenv = require('dotenv');
-const cors = require('cors')
-
-const connection = require('./connection').default;
-const createTable = require('./connection').createTable;
+const cors = require('cors');
+const { connection, createTable } = require('./connection');
 
 dotenv.config();
 const app = express();

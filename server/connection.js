@@ -44,5 +44,5 @@ function createTable(db_connection) {
 };
 
 // export default pool;
-module.exports.default = connection
+module.exports.connection = connection
 module.exports.createTable = createTable;
