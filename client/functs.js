@@ -11,7 +11,7 @@ export default {
     return range;
   },
   fetchRequestHandler: (data) => {
-    fetch('http://localhost:3005/result', {
+    const serverResponse =  fetch('http://localhost:3005/result', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -25,6 +25,8 @@ export default {
     .catch((error) => {
       return error;
     });
+
+    return serverResponse;
   },
   validateEmail:  (email) => {
     const emailRegEx = /\w+@\w+\.(net|com|org|co)/i;

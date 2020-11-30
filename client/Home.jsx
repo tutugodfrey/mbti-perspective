@@ -18,11 +18,11 @@ const Home = () => {
     JP: ['J', 'P'],
   }
   
-  const onSubmit = () => {
+  const onSubmit = async () => {
     if (Object.keys(responses).length !== 10)
       return setErrMessage('Please complete all questions');
     if (!email)
-      return setErrMessage('Please enter you email');
+      return setErrMessage('Please provide your email address in the field below');
     if (!validateEmail(email))
       return setErrMessage('Please provide a valid email address');
 
@@ -39,7 +39,7 @@ const Home = () => {
 
       if (mbtiScoring[dimension]) {
         mbtiScoring[dimension] = mbtiScoring[dimension] + answer;
-        if ((answer > 4 && direction === 1) || answer > 4 && direction === -1) {
+        if ((answer > 4 && direction === 1) || (answer > 4 && direction === -1)) {
           mbtiScoring[meaning] = mbtiScoring[meaning] + 1;
         } else if ((answer < 4 && direction === 1) || (answer < 4 && direction === -1)) {
           const newMeaning = dimArray.find(dim => dim !== meaning);
@@ -51,7 +51,7 @@ const Home = () => {
         mbtiScoring[dimension] = answer;
         mbtiScoring[dimArray[0]] = 0;
         mbtiScoring[dimArray[1]] = 0;
-        if ((answer > 4 && direction === 1) || answer > 4 && direction === -1) {
+        if ((answer > 4 && direction === 1) || (answer > 4 && direction === -1)) {
           mbtiScoring[meaning] = 1;
         } else if ((answer < 4 && direction === 1) || (answer < 4 && direction === -1)) {
           const newMeaning = dimArray.find(dim => dim !== meaning);
@@ -88,7 +88,7 @@ const Home = () => {
 
     responses.email = email;
     responses.mbtiScore = score;
-    const serverResponse = fetchRequestHandler(responses);
+    const serverResponse = await fetchRequestHandler(responses);
     console.log(serverResponse);
   }
 
@@ -165,20 +165,26 @@ const HomePage = ({
                   <div>
                     <strong id='disagree'>Disagree</strong>
                   </div>
+                  <div className='radio-group'>
                   {
                     range(7).map(count => {
                       return (
                         <div key={count}>
                           <input
                             type='radio'
+                            className="answer-radio"
+                            id={`answer${index}${count+1}`}
                             name={`answer${index}`}
                             onChange={handleChange}
                             value={`${index} ${count + 1}`}
                           />
+                          <label for={`answer${index}${count+1}`}></label>
+                          <div className='check'></div>
                         </div>
                       )
                     })
                   }
+                  </div>
                   <div>
                     <strong id='agree'>Agree</strong>
                   </div>
@@ -196,14 +202,14 @@ const HomePage = ({
             onChange={e => getEmail(e.target.value)}
           />
         </div>
-      </div>
-      <div id='submit-div'>
+        <div id='submit-div'>
           <input
             type='submit'
             value='Save & Continue'
             name='submit'
             onClick={onSubmit}
           />
+        </div>
       </div>
   </div>
   )
