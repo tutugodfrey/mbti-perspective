@@ -1,6 +1,5 @@
 const webpack = require('webpack');
 const path = require('path');
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = () => {
@@ -33,20 +32,6 @@ module.exports = () => {
     resolve: {
       extensions: ['.js', '.jsx']
     },
-    // optimization: {
-    //   minimizer: [
-    //     new UglifyJsPlugin({
-    //       cache: true,
-    //       parallel: true,
-    //       uglifyOptions: {
-    //         compress: false,
-    //         ecma: 6,
-    //         mangle: true,
-    //       },
-    //       sourceMap: true
-    //     })
-    //   ]
-    // },
     plugins: [
       new HtmlWebpackPlugin({
         template: path.resolve('./client/index.html')
