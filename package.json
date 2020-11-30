@@ -1,7 +1,7 @@
 {
   "name": "shift-tech-challenge-fullstack",
   "version": "1.0.0",
-  "description": "Rather than a whiteboard interview or an automated coding test, we have each candidate perform a medium sized interview challenge. This challenge is your opportunity to show off your skills, and gives you insight into the type of technical tasks we deal with on a daily basis at SHIFT.",
+  "description": "A simple application to calculate the `Myers-Briggs Type Indicator` of users.",
   "main": "index.js",
   "scripts": {
     "start:dev": "webpack-cli serve --mode development --hot --open 'Google Chrome'",
@@ -22,6 +22,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
+    "@babel/plugin-transform-runtime": "^7.12.1",
     "@babel/preset-env": "^7.12.7",
     "@babel/preset-react": "^7.12.7",
     "babel-loader": "^8.2.1",

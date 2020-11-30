@@ -147,17 +147,57 @@ Create a repository using your personal GitHub account and send us the link. Tha
 Happy Hacking!
 
 # RUNNING THE APPLICATION
+The solution to the challenge has been coded as a Node.js application that export the `/result` API to submit the mbti test score and the users response to each questions to a PostgreSQL database.
 
-The application have been scripted to run in a docker environment and has integration with PostgreSQL database also running as a container. The configuration for building the docker image is in Dockerfile at the root of the project. The following steps will be followed to build the image, run the database server and start the application. However, this has been automated, so you simple run the deploy script by typing in a terminal `./deploy_script`
+The frontend is a Simple React application that provides the interface for users to take MBTI test and see their scoring across the MBTI dimensions. Also, to submit the result to backend API for storage.
 
-run `./deploy_script` or enter the following command one by one
+The two applications can function independently and communicate via the export API `/result` but for convenience I've also expose the `/` API to serve the `index.html` file (available after running `npm run build`) for the frontend.
+
+**Note:**
+- For convenience setup for testing the application, the `.env` file has been included with for to provide the connection string to a postgres database server. Please change the authentication information to suite your environment if running the application locally (not within a docker contain). If using docker container you may leave the connection string as it is to avoid requiring password when deploying the applicaion.
+
+- The application is mean to be served on port 3005 for easy testing. Hence, the connection to the backend `http://localhost:3005/result` has been hard coded in the frontend react app (`./client/functs.js`) to send MBTI score/result to the backend. If for any reason you have to change the PORT number ensure the change is reflected on both the server and the client.
+
+### Running the application in a Docker container
+
+The application have been scripted to run in a docker environment and has integration with PostgreSQL database also running as a container. The configuration for building the docker image is in Dockerfile at the root of the project. The following steps will be followed to build the image, run the database server and start the application. However, this has been automated, so you simple run the deploy script by typing in a terminal `./deploy-script`
+
+run `./deploy-script` or enter the following command one by one
 
 `docker build -t mbti-img:latest .` # Create the application container
 
 `docker run  -d --name postgres_host -p 5433:5432 -e POSTGRES_PASSWORD=postgres postgres` # run a postgres database
 
-`docker run -d -p 3005:3005 --link my_postgres:postgres_host  --name mbti-app mbti-img` # run app link to the database
+`run -d -p 3005:3005 --link postgres_host:postgres_host --name mbti-app mbti-img` # run app link to the database
 
-After the commands succeed, open your browser and visit the page by typing `http://localhost:3005`. 
+After the commands succeed, open your browser and visit the page by typing `http://localhost:3005`.
 
+`docker exec -ti postgres_host sh` exec into the postgres_host container
+
+`psql -U postgres` connect to the postgres db as user postgres
+
+`select * from mbti_result;` select entries on the database; This should show available results if results has been submitted by the application.
+
+### Running the application locally (not within a docker container)
+
+The following step will help to setup the application locally. Please ensure you have Node.js and npm installed in you environment.
+
+`git clone https://github.com/tutugodfrey/mbti-perspective.git` clone the repository
+
+`cd mbti-perspective` change working directory
+
+`npm install` install packages
+
+`npm run build` build the frontend react application
+
+`npm start` start the application. Before starting the application you may need to update the database connection string in `.env` to provide the right credential for connecting to a postgres database server (the app will start anyways).
+
+Open the your browser and enter `http://localhost:3005` to load the application.
+
+## ISSUES
+
+### Test Cases
+I think there is an error in the test cases provided for `Test Case D` and `Test Case E` and would like that it be reviewed carefully as the algorithm could not fit the provided solution without breaking the other Test Cases.
+
+The provided solution for `Test Case D` is `INFP` but the solution is actually `INFJ`, and for `Test Case E` provided solution is `ISFP` but the actual solution is `ISTP`. I actually tried a manual computation to arrive at this solution. Perhap thare are some mixup in the solution provided in the test cases. Please take a second look at the provided Test Cases and the solutions again.
 

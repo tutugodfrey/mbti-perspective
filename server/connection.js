@@ -35,12 +35,11 @@ const tableQuery = `CREATE TABLE IF NOT EXISTS mbti_result (
 );`;
 
 function createTable(db_connection) {
-  db_connection.query(tableQuery).then(result => {
-    console.log('TABLE CREATED OR IT ALREADY EXIST');
-  })
-  .catch(err => {
-    console.log(err);
-  });
+  return db_connection.query(tableQuery)
+    .then(result => {
+      console.log('TABLE CREATED OR IT ALREADY EXIST');
+    })
+    .catch(err => console.log(err));
 };
 
 // export default pool;
