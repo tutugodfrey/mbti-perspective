@@ -36,14 +36,14 @@ const Home = () => {
       const meaning = question.meaning;
       const direction = question.direction;
       const dimArray = mbtiDimension[dimension];
+      const switchedMeaning = dimArray.find(dim => dim !== meaning);
 
       if (mbtiScoring[dimension]) {
         mbtiScoring[dimension] = mbtiScoring[dimension] + answer;
         if ((answer > 4 && direction === 1) || (answer > 4 && direction === -1)) {
           mbtiScoring[meaning] = mbtiScoring[meaning] + 1;
         } else if ((answer < 4 && direction === 1) || (answer < 4 && direction === -1)) {
-          const newMeaning = dimArray.find(dim => dim !== meaning);
-          mbtiScoring[newMeaning] = mbtiScoring[newMeaning] + 1;
+          mbtiScoring[switchedMeaning] = mbtiScoring[switchedMeaning] + 1;
         } else if (answer === 4) {
           mbtiScoring[dimArray[0]] = mbtiScoring[dimArray[0]] + 1;
         }
@@ -54,9 +54,8 @@ const Home = () => {
         if ((answer > 4 && direction === 1) || (answer > 4 && direction === -1)) {
           mbtiScoring[meaning] = 1;
         } else if ((answer < 4 && direction === 1) || (answer < 4 && direction === -1)) {
-          const newMeaning = dimArray.find(dim => dim !== meaning);
-          mbtiScoring[newMeaning] = 1;
-        } else if (answer === 4) {
+          mbtiScoring[switchedMeaning] = 1;
+        }  else if (answer === 4) {
           mbtiScoring[dimArray[0]] = 1;
         }
       }
@@ -178,7 +177,7 @@ const HomePage = ({
                             onChange={handleChange}
                             value={`${index} ${count + 1}`}
                           />
-                          <label for={`answer${index}${count+1}`}></label>
+                          <label htmlFor={`answer${index}${count+1}`}></label>
                           <div className='check'></div>
                         </div>
                       )
