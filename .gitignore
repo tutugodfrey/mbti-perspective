@@ -1,2 +1,4 @@
 node_modules
 public
+tf-deploy/terraform.tfstate
+tf-deploy/terraform.tfstate.backup
