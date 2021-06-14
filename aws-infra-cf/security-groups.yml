@@ -39,6 +39,10 @@ Resources:
           CidrIp: !Ref PublicCidrIp
       SecurityGroupEgress:
         - IpProtocol: tcp
+          FromPort: 3005
+          ToPort: 3005
+          CidrIp: !Ref PublicCidrIp
+        - IpProtocol: tcp
           FromPort: 80
           ToPort: 80
           CidrIp: !Ref PublicCidrIp
@@ -54,6 +58,10 @@ Resources:
       VpcId:
         Fn::ImportValue: !Sub ${ProjectName}-${Environment}-VPC
       SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 3005
+          ToPort: 3005
+          SourceSecurityGroupId: !Ref LoadBalancerSG
         - IpProtocol: tcp
           FromPort: 80
           ToPort: 80

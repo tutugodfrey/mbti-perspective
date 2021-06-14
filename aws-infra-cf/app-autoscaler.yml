@@ -1,0 +1,97 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: >
+  Provision App server with EC2 Auto Scaling group 
+  place under a LoadBalancer
+
+Parameters:
+  ProjectName:
+    Description: Specify the name of the project
+    Type: String
+    Default: mbti
+  Environment:
+    Description:  The environment in use
+    Type: String
+    Default: dev
+    AllowedValues:
+    - dev
+    - test
+    - prod
+  ImageId:
+    Description: The AMI ID to use for instances
+    Type: String
+    # Default: ami-03368e982f317ae48 # Amazon Linux 2 AMI N. Virgina
+    Default: ami-0e999cbd62129e3b1 # Amazon Linux 2 AMI Oregon
+    AllowedValues:
+      - ami-0e999cbd62129e3b1 # Amazon Linux 2 AMI Oregon
+      - ami-03368e982f317ae48 # Amazon Linux 2 AMI N. Virgina
+  InstanceType:
+    Description: Specify the capacity of the instance
+    Type: String
+    Default: t2.micro
+  KeyName:
+    Description: The ssh key to use for login
+    Type: String
+    Default: aws2-oregon-key
+
+Resources:
+  AppServerLaunchTemplate:
+    Type: AWS::EC2::LaunchTemplate
+    Properties:
+      LaunchTemplateName: !Sub ${ProjectName}-${Environment}-Launch-Template
+      LaunchTemplateData:
+        ImageId: !Ref ImageId
+        InstanceType: !Ref InstanceType
+        KeyName: !Ref KeyName
+        IamInstanceProfile:
+          Arn:
+            Fn::ImportValue: !Sub ${ProjectName}-${Environment}-Instance-Profile-ARN
+        SecurityGroupIds:
+         - Fn::ImportValue: !Sub ${ProjectName}-${Environment}-AppServerSG
+        UserData:
+          Fn::Base64: !Sub |
+            #! /bin/bash
+            yum update -y;
+            yum install git -y;
+            git clone --branch lb-and-app-autoscale  https://github.com/tutugodfrey/mbti-perspective;
+            cd mbti-perspective;
+            yum install postgresql-server -y
+            # Get Values from AWS Environment
+            export AWS_REGION=us-west-2
+            export DB_PASS=$(aws ssm get-parameter --name DB_PASS --with-decryption --region $AWS_REGION --query Parameter.Value --output text);
+            export DB_INSTANCE_IDENTIFIER=$(aws cloudformation describe-stacks --stack-name mbti-dev-rds --region $AWS_REGION --query "Stacks[*].Outputs[?OutputKey=='DBInstanceName'].OutputValue"  --output text);
+            export DB_USER=$(aws rds describe-db-instances --db-instance-identifier $DB_INSTANCE_IDENTIFIER --region $AWS_REGION --query DBInstances[*].MasterUsername  --output text);
+            export DB_HOST=$(aws rds describe-db-instances --db-instance-identifier $DB_INSTANCE_IDENTIFIER --region $AWS_REGION --query DBInstances[*].Endpoint.Address  --output text);
+            export DB_NAME=$(aws rds describe-db-instances --db-instance-identifier $DB_INSTANCE_IDENTIFIER --region $AWS_REGION --query DBInstances[*].DBName  --output text);
+            echo $DB_PASS $DB_INSTANCE_IDENTIFIER $DB_USER $DB_HOST $DB_NAME
+            export ADDRESS=$(aws cloudformation describe-stacks --stack-name mbti-dev-loadbalancer --region $AWS_REGION --query "Stacks[*].Outputs[?OutputKey=='LoadBalancerDNS'].OutputValue" --output text);
+            echo $ADDRESS
+            # execute script to install node.js and start the server
+            ./scripts/configure-node-server.sh;
+  
+  AppServerASG:
+    Type: AWS::AutoScaling::AutoScalingGroup
+    Properties:
+      LaunchTemplate: 
+        LaunchTemplateId: !Ref AppServerLaunchTemplate
+        Version: 1
+      VPCZoneIdentifier:
+        - Fn::ImportValue: !Sub ${ProjectName}-${Environment}-AppSubnets
+      DesiredCapacity: 1
+      MinSize: 1
+      MaxSize: 3
+      HealthCheckGracePeriod: 180
+      HealthCheckType: ELB
+      TargetGroupARNs:
+      - Fn::ImportValue: !Sub ${ProjectName}-${Environment}-AppTargetGroupARN
+      Tags:
+        - Key: Name
+          Value: !Sub ${ProjectName}-${Environment}-AppServer
+          PropagateAtLaunch: Yes
+
+
+Outputs:
+  LaunchTemplateARN:
+    Description: ARN of launch AppServer Launch Template
+    Value: !Ref AppServerLaunchTemplate
+    Export:
+      Name: !Sub ${ProjectName}-${Environment}-AppServer-LaunchTemplate
