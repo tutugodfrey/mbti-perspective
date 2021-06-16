@@ -16,6 +16,14 @@ Parameters:
     - dev
     - test
     - prod
+  WorkflowId:
+    Description: >
+      An ID to uniquely identify each run of the template
+      The Id will be use as part of the exported name for resources created or 
+      for importing values where needed
+    Type: String
+    Default: de23469b-1ae3-4f4e-88e9-89a4d7e32a30
+
   ImageId:
     Description: The AMI ID to use for instances
     Type: String
@@ -82,7 +90,7 @@ Resources:
       HealthCheckGracePeriod: 180
       HealthCheckType: ELB
       TargetGroupARNs:
-      - Fn::ImportValue: !Sub ${ProjectName}-${Environment}-AppTargetGroupARN
+      - Fn::ImportValue: !Sub ${ProjectName}-${Environment}-${WorkflowId}-AppTargetGroupARN
       Tags:
         - Key: Name
           Value: !Sub ${ProjectName}-${Environment}-AppServer
@@ -94,4 +102,4 @@ Outputs:
     Description: ARN of launch AppServer Launch Template
     Value: !Ref AppServerLaunchTemplate
     Export:
-      Name: !Sub ${ProjectName}-${Environment}-AppServer-LaunchTemplate
+      Name: !Sub ${ProjectName}-${Environment}-${WorkflowId}-AppServer-LaunchTemplate
