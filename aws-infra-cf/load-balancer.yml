@@ -19,6 +19,13 @@ Parameters:
     Description: Name of the Load Balancer to create
     Type: String
     Default: mbti-lb-server
+  WorkflowId:
+    Description: >
+      An ID to uniquely identify each run of the template
+      The Id will be use as part of the exported name for resources created or 
+      for importing values where needed
+    Type: String
+    Default: de23469b-1ae3-4f4e-88e9-89a4d7e32a30
 
 Resources:
   AppServerLB:
@@ -74,22 +81,22 @@ Outputs:
     Description: ARN of the Load Balancer
     Value: !Ref AppServerLB
     Export:
-      Name: !Sub ${ProjectName}-${Environment}-LoadBalancerARN
+      Name: !Sub ${ProjectName}-${Environment}-${WorkflowId}-LoadBalancerARN
 
   LoadBalancerDNS:
     Description: DNS of the Load Balancer
     Value: !GetAtt AppServerLB.DNSName
     Export:
-      Name: !Sub ${ProjectName}-${Environment}-LoadBalancerDNS
+      Name: !Sub ${ProjectName}-${Environment}-${WorkflowId}-LoadBalancerDNS
 
   LoadBalancerDNS2:
     Description: DNS of the Load Balancer
     Value: !Join ["", [http://, !GetAtt AppServerLB.DNSName]]
     Export:
-      Name: !Sub ${ProjectName}-${Environment}-LoadBalancerDNS2
+      Name: !Sub ${ProjectName}-${Environment}-${WorkflowId}-LoadBalancerDNS2
 
   AppTargetGroupARN:
     Description: ARN of the app target group
     Value: !Ref AppTargetGroup
     Export:
-      Name: !Sub ${ProjectName}-${Environment}-AppTargetGroupARN
+      Name: !Sub ${ProjectName}-${Environment}-${WorkflowId}-AppTargetGroupARN
