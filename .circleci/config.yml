@@ -1,0 +1,22 @@
+version: 2.1
+
+default_image: &default_image
+  docker:
+    - image: amazon/aws-cli
+
+jobs:
+  build:
+    <<: *default_image
+
+    steps:
+      - checkout
+
+      - run:
+          name: Run build
+          command: |
+            ls -al
+
+workflows:
+  default:
+    jobs:
+      - build

@@ -2,7 +2,10 @@
 
 This project is a sample project that demonstrate the MBTI perspective test. It is intended for demonstration of various deployment solutions as DevOps Engineer. 
 
+---
 
+[![CircleCI](https://circleci.com/gh/tutugodfrey/mbti-perspective.svg?style=svg)](https://circleci.com/gh/tutugodfrey/mbti-perspective)
+---
 
 # RUNNING THE APPLICATION N DOCKER CONTAINER
 The solution to the challenge has been coded as a Node.js application that export the `/result` API to submit the mbti test score and the users response to each questions to a PostgreSQL database.
