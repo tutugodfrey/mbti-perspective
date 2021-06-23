@@ -6,7 +6,8 @@
   "scripts": {
     "start:dev": "webpack-cli serve --mode development --hot --open 'Google Chrome'",
     "build": "webpack --mode production",
-    "start": "node server/index.js"
+    "start": "node server/index.js",
+    "lint": "eslint server"
   },
   "author": "Godfrey Tutu",
   "license": "ISC",
@@ -27,6 +28,11 @@
     "@babel/preset-react": "^7.12.7",
     "babel-loader": "^8.2.1",
     "css-loader": "^5.0.1",
+    "eslint": "^7.28.0",
+    "eslint-config-airbnb": "^18.2.1",
+    "eslint-plugin-import": "^2.23.4",
+    "eslint-plugin-jsx-a11y": "^6.4.1",
+    "eslint-plugin-react": "^7.24.0",
     "html-webpack-plugin": "^4.5.0",
     "sass-loader": "^10.1.0",
     "style-loader": "^2.0.0",

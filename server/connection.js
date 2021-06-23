@@ -1,22 +1,18 @@
-const  { Pool } = require('pg');
+const { Pool } = require('pg');
 
 let pool;
-const connection = (connectionString, models=[]) => {
+const connection = (connectionString) => {
   if (!connectionString) return 'No connection string provided! Please provide database connection string to connect.';
   try {
     pool = new Pool({
       connectionString,
     });
+    return pool;
   } catch (err) {
-    console.log(err)
-    throw 'Could not connect to database! Please check you connection string and confirm the database is running';
+    console.log(err);
+    throw Error('Could not connect to database! Please check you connection string and confirm the database is running');
   }
-
-  if (models.length) {
-    models.forEach(model => model.db_connection = pool);
-  }
-  return pool;
-}
+};
 
 const tableQuery = `CREATE TABLE IF NOT EXISTS mbti_result (
   id SERIAL NOT NULL PRIMARY KEY,
@@ -34,14 +30,14 @@ const tableQuery = `CREATE TABLE IF NOT EXISTS mbti_result (
   email VARCHAR(30) NOT NULL UNIQUE
 );`;
 
-function createTable(db_connection) {
-  return db_connection.query(tableQuery)
-    .then(result => {
+function createTable(dbConnection) {
+  return dbConnection.query(tableQuery)
+    .then(() => {
       console.log('TABLE CREATED OR IT ALREADY EXIST');
     })
-    .catch(err => console.log(err));
-};
+    .catch((err) => console.log(err));
+}
 
 // export default pool;
-module.exports.connection = connection
+module.exports.connection = connection;
 module.exports.createTable = createTable;

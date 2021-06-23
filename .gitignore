@@ -3,3 +3,4 @@ public
 tf-deploy/terraform.tfstate
 tf-deploy/terraform.tfstate.backup
 tf-deploy/.terraform/
+.env

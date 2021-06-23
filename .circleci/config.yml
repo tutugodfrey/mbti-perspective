@@ -4,17 +4,26 @@ default_image: &default_image
   docker:
     - image: amazon/aws-cli
 
+node_image: &node_image
+   docker:
+     - image: circleci/node:13.8.0
+
 jobs:
   build:
-    <<: *default_image
+    <<: *node_image
 
     steps:
       - checkout
 
       - run:
-          name: Run build
+          name: Install Dependencies
           command: |
-            ls -al
+            npm install
+
+      - run:
+          name: Run lint
+          command: |
+            npm run lint
 
 workflows:
   default:
