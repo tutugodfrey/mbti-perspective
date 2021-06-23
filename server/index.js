@@ -1,3 +1,4 @@
+const path = require('path');
 const express = require('express');
 const bodyParser = require('body-parser');
 const dotenv = require('dotenv');
@@ -11,16 +12,15 @@ app.use(bodyParser.json());
 app.use(cors());
 
 app.use(express.static('public'));
-app.get('/*', (req, res) => {
-  return res.status(200).sendFile('index.html')
-});
+app.get('/*', (req, res) => res.status(200).sendFile('index.html',
+  { root: path.resolve(__dirname, '../public') }));
 
 const dbUrl = process.env.DATABASE_URL;
-const db_connection = connection(dbUrl);
+const dbConnection = connection(dbUrl);
 
 // create database table, if not exists;
-createTable(db_connection);
-app.post('/result', async (req, res) =>  {
+createTable(dbConnection);
+app.post('/result', async (req, res) => {
   const userData = req.body;
   const queryString = `INSERT INTO mbti_result (
                       answer1, answer2, answer3, answer4, answer5, answer6, answer7, answer8, answer9, answer10, mbtiscore, email)
@@ -34,15 +34,11 @@ app.post('/result', async (req, res) =>  {
                               '${userData['7']}',
                               '${userData['8']}',
                               '${userData['9']}',
-                              '${userData['mbtiScore']}',
-                              '${userData['email']}')
+                              '${userData.mbtiScore}',
+                              '${userData.email}')
                               returning *;`;
-  return db_connection.query(queryString).then(result => {
-    return res.status(200).json(result.rows[0]);
-  })
-  .catch(err => {
-    return res.status(500).json({ message: err })
-  });
+  return dbConnection.query(queryString).then((result) => res.status(200).json(result.rows[0]))
+    .catch((err) => res.status(500).json({ message: err }));
 });
 
 const port = process.env.PORT || 3005;
