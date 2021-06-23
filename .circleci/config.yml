@@ -5,8 +5,14 @@ default_image: &default_image
     - image: amazon/aws-cli
 
 node_image: &node_image
-   docker:
-     - image: circleci/node:13.8.0
+  docker:
+    - image: circleci/node:13.8.0
+
+      environment:
+        NODE_ENV: test
+        TEST_DATABASE_URL: postgresql://root@localhost/circle_test
+    
+    - image: circleci/postgres:9.6.5-alpine-ram
 
 jobs:
   build:
@@ -24,8 +30,28 @@ jobs:
           name: Run lint
           command: |
             npm run lint
+  
+  test:
+    <<: *node_image
+
+    steps:
+      - checkout
+
+      - run:
+          name: Install Dependencies
+          command: |
+            npm install
+      - run:
+          name: Install Dependencies
+          command: |
+            env
+            node server/createTable.js
+            npm test
+      
 
 workflows:
   default:
     jobs:
       - build
+      - test:
+          requires: [build]
