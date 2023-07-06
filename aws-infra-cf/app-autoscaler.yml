@@ -64,14 +64,42 @@ Resources:
             cd mbti-perspective;
             yum install postgresql-server -y
             # Get Values from AWS Environment
-            export AWS_REGION=us-west-2
-            export DB_PASS=$(aws ssm get-parameter --name DB_PASS --with-decryption --region $AWS_REGION --query Parameter.Value --output text);
-            export DB_INSTANCE_IDENTIFIER=$(aws cloudformation describe-stacks --stack-name mbti-dev-rds --region $AWS_REGION --query "Stacks[*].Outputs[?OutputKey=='DBInstanceName'].OutputValue"  --output text);
-            export DB_USER=$(aws rds describe-db-instances --db-instance-identifier $DB_INSTANCE_IDENTIFIER --region $AWS_REGION --query DBInstances[*].MasterUsername  --output text);
-            export DB_HOST=$(aws rds describe-db-instances --db-instance-identifier $DB_INSTANCE_IDENTIFIER --region $AWS_REGION --query DBInstances[*].Endpoint.Address  --output text);
-            export DB_NAME=$(aws rds describe-db-instances --db-instance-identifier $DB_INSTANCE_IDENTIFIER --region $AWS_REGION --query DBInstances[*].DBName  --output text);
+            export AWS_REGION=${AWS::Region}
+            export DB_PASS=$(aws ssm get-parameter --name DB_PASS \
+              --with-decryption --region $AWS_REGION \
+              --query Parameter.Value \
+              --output text);
+
+            export DB_INSTANCE_IDENTIFIER=$(aws cloudformation describe-stacks \
+              --stack-name ${ProjectName}-${Environment}-rds \
+              --region $AWS_REGION \
+              --query "Stacks[*].Outputs[?OutputKey=='DBInstanceName'].OutputValue" \
+              --output text);
+
+            export DB_USER=$(aws rds describe-db-instances \
+              --db-instance-identifier $DB_INSTANCE_IDENTIFIER \
+              --region $AWS_REGION \
+              --query DBInstances[*].MasterUsername \
+              --output text);
+
+            export DB_HOST=$(aws rds describe-db-instances \
+              --db-instance-identifier $DB_INSTANCE_IDENTIFIER \
+              --region $AWS_REGION \
+              --query DBInstances[*].Endpoint.Address \
+              --output text);
+
+            export DB_NAME=$(aws rds describe-db-instances \
+              --db-instance-identifier $DB_INSTANCE_IDENTIFIER \
+              --region $AWS_REGION \
+              --query DBInstances[*].DBName \
+              --output text);
+
             echo $DB_PASS $DB_INSTANCE_IDENTIFIER $DB_USER $DB_HOST $DB_NAME
-            export ADDRESS=$(aws cloudformation describe-stacks --stack-name mbti-dev-loadbalancer --region $AWS_REGION --query "Stacks[*].Outputs[?OutputKey=='LoadBalancerDNS'].OutputValue" --output text);
+            export ADDRESS=$(aws cloudformation describe-stacks \
+              --stack-name ${ProjectName}-${Environment}-loadbalancer-${WorkflowId} \
+              --region $AWS_REGION \
+              --query "Stacks[*].Outputs[?OutputKey=='LoadBalancerDNS'].OutputValue" \
+              --output text);
             echo $ADDRESS
             # execute script to install node.js and start the server
             ./scripts/configure-node-server.sh;
@@ -95,7 +123,6 @@ Resources:
         - Key: Name
           Value: !Sub ${ProjectName}-${Environment}-AppServer
           PropagateAtLaunch: Yes
-
 
 Outputs:
   LaunchTemplateARN:
